@@ -12,26 +12,26 @@ public class Server {
 
         try {
             socket = new DatagramSocket(PORT);
-            byte[] buffer = initBuffer();
+            byte[] buffer = new byte[BUFFER_SIZE];
 
             System.out.println("Server executed. Running on port " + PORT);
 
             while (true) {
                 System.out.println("\nWaiting for a packet...");
-                DatagramPacket request = new DatagramPacket(buffer, BUFFER_SIZE);
-                socket.receive(request);
+                DatagramPacket received = new DatagramPacket(buffer, BUFFER_SIZE);
+                socket.receive(received);
 
-                displayRequestInfo(request);
+                displayRequestInfo(received);
 
                 DatagramPacket response = new DatagramPacket(
-                    request.getData(),
-                    request.getLength(),
-                    request.getAddress(),
-                    request.getPort()
+                    received.getData(),
+                    received.getLength(),
+                    received.getAddress(),
+                    received.getPort()
                 );
 
                 socket.send(response);
-                buffer = initBuffer();
+                buffer = new byte[BUFFER_SIZE];
             }
 
         } catch (SocketException e) {

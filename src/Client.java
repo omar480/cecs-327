@@ -3,9 +3,10 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.Scanner;
-import java.net.DatagramSocket;
 
 public class Client {
+    static final int BUFFER_SIZE = 1000;
+
     public static void main(String[] args) {
         Scanner reader = null;
         DatagramSocket socket = null;
@@ -53,15 +54,17 @@ public class Client {
             String msg = reader.nextLine();
 
             InetAddress host = InetAddress.getByName(ip);
-            DatagramPacket request = new DatagramPacket(msg.getBytes(), msg.getBytes().length, host,
-                    Integer.parseInt(port));
+            DatagramPacket request = new DatagramPacket(
+                msg.getBytes(),
+                msg.getBytes().length,
+                host,
+                Integer.parseInt(port));
 
             socket.send(request);
 
-            byte[] buffer = new byte[1000];
+            byte[] buffer = new byte[BUFFER_SIZE];
             DatagramPacket response = new DatagramPacket(buffer, buffer.length);
             socket.receive(response);
-
             displayResponseInfo(response);
 
         } catch (SocketException e) {
@@ -91,7 +94,7 @@ public class Client {
     private static boolean validateIp(String ip) {
         String ipRegex = "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
                 + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
-        return ip.matches(ipRegex);
+        return ip.matches(ipRegex) || ip.equals("localhost");
     }
 
     private static boolean validatePort(String port) {
@@ -99,19 +102,3 @@ public class Client {
         return port.matches(portRegex);
     }
 }
-
-// class InvalidPortException extends Exception {
-// private static final long serialVersionUID = 1L;
-
-// InvalidPortException(String msg) {
-// super(msg);
-// }
-// }
-
-// class InvalidIPException extends Exception {
-// private static final long serialVersionUID = 1L;
-
-// InvalidIPException(String msg) {
-// super(msg);
-// }
-// }
