@@ -48,25 +48,27 @@ public class Client {
             }
 
             System.out.println("Starting the client...");
-            socket = new DatagramSocket();
 
-            System.out.print("Message to send to server: ");
-            String msg = reader.nextLine();
+            while (true) {
+                socket = new DatagramSocket();
 
-            InetAddress host = InetAddress.getByName(ip);
-            DatagramPacket request = new DatagramPacket(
-                msg.getBytes(),
-                msg.getBytes().length,
-                host,
-                Integer.parseInt(port));
+                System.out.print("\nMessage to send to server: ");
+                String msg = reader.nextLine();
 
-            socket.send(request);
+                InetAddress host = InetAddress.getByName(ip);
+                DatagramPacket request = new DatagramPacket(
+                    msg.getBytes(),
+                    msg.getBytes().length,
+                    host,
+                    Integer.parseInt(port));
 
-            byte[] buffer = new byte[BUFFER_SIZE];
-            DatagramPacket response = new DatagramPacket(buffer, buffer.length);
-            socket.receive(response);
-            displayResponseInfo(response);
+                socket.send(request);
 
+                byte[] buffer = new byte[BUFFER_SIZE];
+                DatagramPacket response = new DatagramPacket(buffer, buffer.length);
+                socket.receive(response);
+                displayResponseInfo(response);
+            }
         } catch (SocketException e) {
             System.out.println(Client.class.getName() + " : " + e.getMessage());
         } catch (Exception e) {
@@ -90,10 +92,11 @@ public class Client {
             + "\nSize: " + res.getLength());
     }
 
-
     private static boolean validateIp(String ip) {
-        String ipRegex = "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-                + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        String ipRegex = "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+            + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+            + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+            + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
         return ip.matches(ipRegex) || ip.equals("localhost");
     }
 

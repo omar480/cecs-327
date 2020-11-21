@@ -53,8 +53,4 @@ public class Server {
             + "\nIP: " + req.getAddress()
             + "\nSize: " + req.getLength());
     }
-
-    private static byte[] initBuffer() {
-        return new byte[BUFFER_SIZE];
-    }
 }
