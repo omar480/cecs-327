@@ -25,7 +25,6 @@ public class Client {
                     throw new Exception("Pass valid arguments! Try: java Client <port> <ip address>");
                 }
             } else {
-
                 // input for port
                 while (true) {
                     System.out.print("Enter the port number: ");
@@ -94,6 +93,7 @@ public class Client {
             }
         }
     }
+
     /**
      * Displays the response from the server.
      *
@@ -103,8 +103,7 @@ public class Client {
         System.out.println("\n**********************");
         System.out.println("* Data from Server   *");
         System.out.println("**********************");
-        System.out.println("Message: " + new String(res.getData()).trim()
-            + "\nSize: " + res.getLength());
+        System.out.println("Message: " + new String(res.getData()).trim() + "\nSize: " + res.getLength());
     }
 
     /**
@@ -114,10 +113,8 @@ public class Client {
      * @return true if the ip is a valid ipv4 address.
      */
     private static boolean validateIp(String ip) {
-        String ipRegex = "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-            + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-            + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-            + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        String ipRegex = "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+                + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
         return ip.matches(ipRegex) || ip.equals("localhost");
     }
 
@@ -128,6 +125,7 @@ public class Client {
      * @return true if the port is valid.
      */
     private static boolean validatePort(String port) {
-       return (Integer.parseInt(port) >= 1 && Integer.parseInt(port) <= 65535);
+        String portRegex = "^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-6][0-3][0-5])$";
+        return port.matches((portRegex));
     }
 }
