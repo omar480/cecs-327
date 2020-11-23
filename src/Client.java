@@ -4,63 +4,45 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.Scanner;
 
-// creating a class for client
 public class Client {
-    /**
-     * declaring buffer_size to 1000
-     */
     static final int BUFFER_SIZE = 1000;
 
     public static void main(String[] args) {
         Scanner reader = null;
         DatagramSocket socket = null;
 
-        /**
-         * Try statement will test for errors while executing 
-         * catch statment will handle the errors 
-         */
         try {
             reader = new Scanner(System.in);
             String port = null;
             String ip = null;
-            /**
-             * Port & IP entered from cmd line
-             */
+
+            // only for when port and ip are passed as arguments
             if (args.length == 2) {
                 port = args[0];
                 ip = args[1];
-              
-                /**
-                 * Error handling msg
-                 */
+
                 if (!validatePort(port) || !validateIp(ip)) {
                     throw new Exception("Pass valid arguments! Try: java Client <port> <ip address>");
                 }
             } else {
+
+                // input for port
                 while (true) {
-                    /**
-                     * If condition is met, proceed for port number
-                     */
                     System.out.print("Enter the port number: ");
                     port = reader.nextLine();
-                    /**
-                     * Checking if port number is valid
-                     */
+
                     if (!validatePort(port)) {
                         System.out.println("Enter a valid port!");
                         continue;
                     }
                     break;
                 }
-                /**
-                 * Prompt for ip address
-                 */
+
+                // input for ip
                 while (true) {
                     System.out.print("Enter the ip address: ");
                     ip = reader.nextLine();
-                    /**
-                     * Error handling message
-                     */
+
                     if (!validateIp(ip)) {
                         System.out.println("Enter a valid ip!");
                         continue;
@@ -68,7 +50,7 @@ public class Client {
                     break;
                 }
             }
-            
+
             System.out.println("Starting the client...");
 
             while (true) {
@@ -77,27 +59,26 @@ public class Client {
                 System.out.print("\nMessage to send to server: ");
                 String msg = reader.nextLine();
 
+                // if ip was entered as a name, conver it to a
                 InetAddress host = InetAddress.getByName(ip);
-                /**
-                 * Get msg in bytes and length
-                 */
+
+                // request to server, send message
                 DatagramPacket request = new DatagramPacket(
                     msg.getBytes(),
                     msg.getBytes().length,
                     host,
-                    Integer.parseInt(port));
-
+                    Integer.parseInt(port)
+                );
                 socket.send(request);
 
-                /**
-                 * buffer for incoming data
-                 */
+                // will hold the data from the server
                 byte[] buffer = new byte[BUFFER_SIZE];
+
+                // response from server, getting message
                 DatagramPacket response = new DatagramPacket(buffer, buffer.length);
-                /**
-                 * receiving the datagram packet
-                 */
                 socket.receive(response);
+
+                // display the response from the server
                 displayResponseInfo(response);
             }
         } catch (SocketException e) {
@@ -114,21 +95,23 @@ public class Client {
         }
     }
     /**
-     * Display Response data from the server
-     * @param res 
+     * Displays the response from the server.
+     *
+     * @param res is the response.
      */
     private static void displayResponseInfo(DatagramPacket res) {
         System.out.println("\n**********************");
         System.out.println("* Data from Server   *");
         System.out.println("**********************");
         System.out.println("Message: " + new String(res.getData()).trim()
-            + "\nIP: " + res.getAddress()
             + "\nSize: " + res.getLength());
     }
+
     /**
-     * Boolean statement check if IP meets valid criteria
-     * @param ip
-     * @return
+     * Validate ipv4 addresses.
+     *
+     * @param ip the ipv4 address.
+     * @return true if the ip is a valid ipv4 address.
      */
     private static boolean validateIp(String ip) {
         String ipRegex = "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
@@ -139,12 +122,12 @@ public class Client {
     }
 
     /**
-     * Boolean statement Port meets valid criteria
-     * @param port
-     * @return
+     * Validate port numbers. The port range is [1-65535].
+     *
+     * @param port is the port number.
+     * @return true if the port is valid.
      */
     private static boolean validatePort(String port) {
-        String portRegex = "(^[1-9]{4}$)";
-        return port.matches(portRegex);
+       return (Integer.parseInt(port) >= 1 && Integer.parseInt(port) <= 65535);
     }
 }
