@@ -16,4 +16,4 @@
 
 - To pass as arguments, try `java Client 6789 localhost` or `java Client 6789 127.0.0.1`
 
-- The server is using port 6789, and the localhost IP: 127.0.0.1
+- The server is using port 6789 by default.
